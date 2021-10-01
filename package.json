@@ -2,7 +2,12 @@
   "name": "st-assignator",
   "version": "0.0.1",
   "scripts": {
-    "start": "concurrently \"webpack -- --watch\" \"nodemon server.js\""
+    "build": "NODE_ENV=production npm run build:assets && npm run build:server && npm run build:client",
+    "build:assets": "mkdir -p public && cp -r src/assets/* public/",
+    "build:client": "NODE_ENV=production webpack --mode production --progress --config ./webpack.config.prod.js",
+    "build:server": "NODE_ENV=production babel src -d build --ignore *.test.js",
+    "clean": "rm -r build/* & find public/ -type f -exec rm {} + || true",
+    "start:dev": "concurrently \"webpack -- --watch\" \"nodemon server.js\""
   },
   "babel": {
     "presets": [
@@ -22,6 +27,7 @@
     "serialize-javascript": "^6.0.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.15.7",
     "@babel/core": "^7.15.5",
     "@babel/plugin-proposal-object-rest-spread": "^7.15.6",
     "@babel/preset-env": "^7.15.6",
